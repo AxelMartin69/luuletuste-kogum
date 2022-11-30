@@ -12,7 +12,7 @@ export default function App() {
     }, []);
 
     const fetchAllPoems = () => {
-        fetch('http://localhost:8000/')
+        fetch('http://127.0.0.1:8000/')
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);
@@ -47,6 +47,7 @@ export default function App() {
                         }}>
                         Log Out
                     </button>
+                    <button onClick={navigate('/my-poems')}>My Poems</button>
                     {poems.map((poem) => (
                         <Poems key={poem.id} title={poem.title} body={poem.body} author={poem.author} entry_time={poem.entry_time} likes={poem.likes} token={token} />
                     ))}

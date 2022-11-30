@@ -208,8 +208,9 @@ def create_new_poem(poem: Poem, token: str = Depends(oauth2_scheme), db: Session
         body = poem.body
         owner_id = db.execute('SELECT id FROM users WHERE username = :username', {
             'username': token_data.username}).fetchall()[0][0]
-        db.execute('INSERT INTO poems (title, body, owner_id) VALUES (:title, :body, :owner_id)', {
-            'title': title, 'body': body, 'owner_id': owner_id})
+        entry_time = datetime.now()
+        db.execute('INSERT INTO poems (title, body, entry_time, owner_id) VALUES (:title, :body, :entry_time, :owner_id)', {
+            'title': title, 'body': body, 'entry_time': entry_time, 'owner_id': owner_id})
         db.commit()
         return {'message': 'Poem created successfully'}
     except:
