@@ -214,3 +214,27 @@ def create_new_poem(poem: Poem, token: str = Depends(oauth2_scheme), db: Session
         return {'message': 'Poem created successfully'}
     except:
         return {'message': 'Something went wrong'}
+
+
+# Get users poems
+@app.get("/users/me/")
+async def read_users_me(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    token_data = validate_token(token)
+
+    user = db.query(models.User).filter(
+        models.User.username == token_data.username).first()
+    poems = db.query(models.Poem).filter(
+        models.Poem.owner_id == user.id).all()
+    for i in range(len(poems)):
+        # count likes where poem_id = poem.id
+        poems[i].likes = db.execute(
+            'SELECT COUNT(poem_id) FROM likes WHERE poem_id = :poem_id', {'poem_id': poems[i].id}).fetchall()[0][0]
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    if not user.is_active:
+        raise HTTPException(status_code=400, detail="Inactive user")
+    return {"username": user.username, "poems": poems}
