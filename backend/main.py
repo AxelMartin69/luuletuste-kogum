@@ -196,3 +196,21 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+# Create new poem
+@app.post('/poems/new')
+def create_new_poem(poem: Poem, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    token_data = validate_token(token)
+
+    try:
+        title = poem.title
+        body = poem.body
+        owner_id = db.execute('SELECT id FROM users WHERE username = :username', {
+            'username': token_data.username}).fetchall()[0][0]
+        db.execute('INSERT INTO poems (title, body, owner_id) VALUES (:title, :body, :owner_id)', {
+            'title': title, 'body': body, 'owner_id': owner_id})
+        db.commit()
+        return {'message': 'Poem created successfully'}
+    except:
+        return {'message': 'Something went wrong'}
