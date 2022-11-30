@@ -5,7 +5,7 @@ npm install
 ```
 
 ```
-pip install fastapi sqlalchemy
+pip install -r requirements.txt
 ```
 
 ```
