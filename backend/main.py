@@ -99,4 +99,7 @@ async def get_poems(db: Session = Depends(get_db)):
         # count likes where poem_id = poem.id
         poems[i].likes = db.execute(
             f'SELECT COUNT(poem_id) FROM likes WHERE poem_id = {poems[i].id}').fetchall()[0][0]
+        # get username where user_id = poem.owner_id
+        poems[i].author = db.execute(
+            f'SELECT username FROM users WHERE id = {poems[i].owner_id}').fetchall()[0][0]
     return poems
