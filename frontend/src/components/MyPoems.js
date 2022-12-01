@@ -28,19 +28,21 @@ export default function MyPoems() {
     };
 
     const handlePoemDelete = (poemId, token) => {
-        const options = {
-            method: 'DELETE',
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        };
+        if (confirm('Are you sure you want to delete this poem?')) {
+            const options = {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            };
 
-        fetch(`http://127.0.0.1:8000/poems/delete/${poemId}`, options)
-            .then((response) => response.json())
-            .then((response) => console.log(response))
-            .catch((err) => console.error(err));
+            fetch(`http://127.0.0.1:8000/poems/delete/${poemId}`, options)
+                .then((response) => response.json())
+                .then((response) => console.log(response))
+                .catch((err) => console.error(err));
 
-        window.location.reload();
+            window.location.reload();
+        }
     };
 
     return (
