@@ -266,3 +266,16 @@ def edit_poem(id: int, poem: Poem, token: str = Depends(oauth2_scheme), db: Sess
         return {'message': f'Poem with id: {id} has been updated successfully'}
     except:
         return {'message': 'Something went wrong'}
+
+
+# Delete poem by id (only owner can delete)
+@app.delete('/poems/delete/{id}')
+def delete_poem(id: int, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    validate_token(token)
+
+    try:
+        db.delete(db.query(models.Poem).filter(models.Poem.id == id).first())
+        db.commit()
+        return {'message': f'Poem with id: {id} has been deleted successfully'}
+    except:
+        return {'message': 'Something went wrong'}
