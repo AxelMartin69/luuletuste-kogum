@@ -31,10 +31,14 @@ export default function NewPoem() {
     return (
         <div>
             <form>
-                <label htmlFor="title">Title</label>
-                <input type="text" id="title" name="title" />
-                <label htmlFor="body">Body</label>
-                <input type="text" id="body" name="body" />
+                <label>
+                    Title:
+                    <input type="text" name="title" />
+                </label>
+                <label>
+                    Body:
+                    <textarea name="body" />
+                </label>
                 <input type="submit" value="Submit new poem" onClick={handleSubmit} />
                 <input type="submit" value="Back" onClick={() => navigate('/my-poems')} />
             </form>

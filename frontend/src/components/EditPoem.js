@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function EditPoem() {
+    const navigate = useNavigate();
     const params = useParams();
     const token = localStorage.getItem('token');
     const [poemTitle, setPoemTitle] = useState('');
@@ -55,7 +56,6 @@ export default function EditPoem() {
 
     return (
         <div>
-            <h1>Poem title is {poemTitle}</h1>
             <form>
                 <label>
                     Title:
@@ -69,6 +69,7 @@ export default function EditPoem() {
                     Submit
                 </button>
             </form>
+            <button onClick={() => navigate('/my-poems')}>Back</button>
         </div>
     );
 }
