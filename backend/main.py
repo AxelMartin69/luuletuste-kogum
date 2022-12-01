@@ -279,3 +279,17 @@ def delete_poem(id: int, token: str = Depends(oauth2_scheme), db: Session = Depe
         return {'message': f'Poem with id: {id} has been deleted successfully'}
     except:
         return {'message': 'Something went wrong'}
+
+
+# Like poem by id (only logged in users can like)
+@app.post('/poems/like/{poem_id}')
+def like_poem(poem_id: int, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    token_data = validate_token(token)
+
+    try:
+        db.execute('INSERT INTO likes (poem_id, user_id) VALUES (:poem_id, :user_id)', {
+            'poem_id': poem_id, 'user_id': db.execute('SELECT id FROM users WHERE username = :username', {'username': token_data.username}).fetchall()[0][0]})
+        db.commit()
+        return {'message': f'Poem with id: {poem_id} has been liked successfully'}
+    except:
+        return {'message': 'Something went wrong'}
