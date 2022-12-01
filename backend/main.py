@@ -239,3 +239,17 @@ async def read_users_me(token: str = Depends(oauth2_scheme), db: Session = Depen
     if not user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return {"username": user.username, "poems": poems}
+
+
+# Edit poem by id (only owner can edit)
+@app.put('/poems/update/{id}')
+def edit_poem(id: int, poem: Poem, token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    token_data = validate_token(token)
+
+    try:
+        db.execute('UPDATE poems SET title = :title, body = :body WHERE id = :id AND owner_id = :owner_id', {
+            'title': poem.title, 'body': poem.body, 'id': id, 'owner_id': db.execute('SELECT id FROM users WHERE username = :username', {'username': token_data.username}).fetchall()[0][0]})
+        db.commit()
+        return {'message': f'Poem with id: {id} has been updated successfully'}
+    except:
+        return {'message': 'Something went wrong'}
