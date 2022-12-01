@@ -16,6 +16,7 @@ export default function App() {
             .then((response) => response.json())
             .then((data) => {
                 setPoems(data);
+                console.log(data);
             });
     };
 
@@ -35,7 +36,7 @@ export default function App() {
                         Log In
                     </button>
                     {poems.map((poem) => (
-                        <Poems key={poem.id} title={poem.title} body={poem.body} author={poem.author} entry_time={poem.entry_time} likes={poem.likes} />
+                        <Poems poem_id={poem.id} title={poem.title} body={poem.body} author={poem.author} entry_time={poem.entry_time} likes={poem.likes} />
                     ))}
                 </div>
             ) : (
@@ -48,7 +49,7 @@ export default function App() {
                     </button>
                     <button onClick={() => navigate('/my-poems')}>My Poems</button>
                     {poems.map((poem) => (
-                        <Poems key={poem.id} title={poem.title} body={poem.body} author={poem.author} entry_time={poem.entry_time} likes={poem.likes} token={token} />
+                        <Poems poem_id={poem.id} title={poem.title} body={poem.body} author={poem.author} entry_time={poem.entry_time} likes={poem.likes} token={token} />
                     ))}
                 </div>
             )}

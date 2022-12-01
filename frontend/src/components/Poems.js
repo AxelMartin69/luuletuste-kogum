@@ -1,8 +1,21 @@
 import React from 'react';
 
 export default function Poems(props) {
-    const handleLike = () => {
-        console.log(`liked: ${props.title}, ${props.id}`);
+    const token = localStorage.getItem('token');
+
+    const handleLike = (token) => {
+        const options = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+            },
+        };
+
+        fetch(`http://127.0.0.1:8000/poems/like/${props.poem_id}`, options)
+            .then((response) => response.json())
+            .then((response) => console.log(response))
+            .catch((err) => console.error(err));
     };
     return (
         <div key={props.id}>
@@ -13,7 +26,7 @@ export default function Poems(props) {
                 <li>Loodud: {props.entry_time}</li>
                 {props.token ? (
                     <li>
-                        <button onClick={handleLike}>Likes: {props.likes}</button>
+                        <button onClick={() => handleLike(token)}>Likes: {props.likes}</button>
                     </li>
                 ) : (
                     <li>Likes: {props.likes}</li>
