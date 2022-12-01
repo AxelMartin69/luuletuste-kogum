@@ -29,6 +29,7 @@ export default function MyPoems() {
 
     return (
         <div>
+            <button onClick={() => navigate('/new-poem')}>New Poem</button>
             {poems.map((poem) => (
                 <Poems key={poem.id} title={poem.title} body={poem.body} author={poem.author} entry_time={poem.entry_time} likes={poem.likes} token={token} />
             ))}

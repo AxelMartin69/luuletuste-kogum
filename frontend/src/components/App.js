@@ -47,7 +47,7 @@ export default function App() {
                         }}>
                         Log Out
                     </button>
-                    <button onClick={navigate('/my-poems')}>My Poems</button>
+                    <button onClick={() => navigate('/my-poems')}>My Poems</button>
                     {poems.map((poem) => (
                         <Poems key={poem.id} title={poem.title} body={poem.body} author={poem.author} entry_time={poem.entry_time} likes={poem.likes} token={token} />
                     ))}
