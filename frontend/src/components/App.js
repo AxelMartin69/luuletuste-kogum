@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Poems from './Poems';
 
@@ -15,7 +15,6 @@ export default function App() {
         fetch('http://127.0.0.1:8000/')
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
                 setPoems(data);
             });
     };

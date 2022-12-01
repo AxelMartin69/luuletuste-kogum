@@ -169,9 +169,8 @@ async def get_poems(db: Session = Depends(get_db)):
             f'SELECT username FROM users WHERE id = {poems[i].owner_id}').fetchall()[0][0]
     return poems
 
+
 # Get token
-
-
 @ app.post("/token", response_model=Token)
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     # get user from db by username
@@ -196,6 +195,20 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+# Get poem by id
+@app.get('/poems/{poem_id}')
+async def get_poem(poem_id: int, db: Session = Depends(get_db)):
+    poem = db.query(models.Poem).filter(
+        models.Poem.id == poem_id).first()
+    if poem is None:
+        raise HTTPException(status_code=404, detail="Poem not found")
+    poem.likes = db.execute(
+        f'SELECT COUNT(poem_id) FROM likes WHERE poem_id = {poem.id}').fetchall()[0][0]
+    poem.author = db.execute(
+        f'SELECT username FROM users WHERE id = {poem.owner_id}').fetchall()[0][0]
+    return poem
 
 
 # Create new poem
